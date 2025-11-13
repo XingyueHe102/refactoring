@@ -5,11 +5,20 @@ package theater;
  */
 public class Performance {
 
-    public String playID;
-    public int audience;
+    private final String playID;
+    private final int audience;
 
     public Performance(String playID, int audience) {
         this.playID = playID;
         this.audience = audience;
+    }
+
+    public int getAudience() {
+        return audience;
+    }
+
+    @SuppressWarnings({"checkstyle:MissingJavadocMethod", "checkstyle:SuppressWarnings"})
+    public String getPlayID() {
+        return playID;
     }
 }
