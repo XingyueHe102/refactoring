@@ -14,7 +14,11 @@ public class StatementPrinter {
         this.plays = plays;
     }
 
-    @SuppressWarnings({"checkstyle:FinalLocalVariable", "checkstyle:SuppressWarnings", "checkstyle:MissingJavadocMethod"})
+    @SuppressWarnings(
+            {"checkstyle:FinalLocalVariable",
+                    "checkstyle:SuppressWarnings",
+                    "checkstyle:MissingJavadocMethod",
+                    "checkstyle:Indentation"})
     public String statement() {
 
         StringBuilder result = new StringBuilder("Statement for " + invoice.getCustomer() + System.lineSeparator());
@@ -96,7 +100,15 @@ public class StatementPrinter {
         return result;
     }
 
+    @SuppressWarnings("checkstyle:MagicNumber")
     private String usd(int amount) {
         return NumberFormat.getCurrencyInstance(Locale.US).format(amount / 100.0);
+    }
+    @SuppressWarnings({"checksstyle:MissingJavadocMethod",
+                       "checkstyle:EmptyLineSeparator",
+                       "checkstyle:MissingJavadocMethod"}
+    )
+    public Play getPlay(Performance performance) {
+        return plays.get(performance.getPlayID());
     }
 }
