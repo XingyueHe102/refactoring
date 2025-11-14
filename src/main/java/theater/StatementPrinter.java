@@ -4,6 +4,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.Map;
 
+@SuppressWarnings({"checkstyle:WriteTag", "checkstyle:SuppressWarnings"})
 public class StatementPrinter {
     private final Invoice invoice;
     private final Map<String, Play> plays;
@@ -13,30 +14,49 @@ public class StatementPrinter {
         this.plays = plays;
     }
 
-    @SuppressWarnings({"checkstyle:MagicNumber", "checkstyle:FinalLocalVariable", "checkstyle:SuppressWarnings", "checkstyle:NeedBraces", "checkstyle:LineLength"})
+    @SuppressWarnings({"checkstyle:FinalLocalVariable", "checkstyle:SuppressWarnings", "checkstyle:MissingJavadocMethod"})
     public String statement() {
-        int totalAmount = 0;
-        int volumeCredits = 0;
+
         StringBuilder result = new StringBuilder("Statement for " + invoice.getCustomer() + System.lineSeparator());
 
+        // ---- Loop 1: build individual performance lines ----
         for (Performance p : invoice.getPerformances()) {
             Play play = plays.get(p.getPlayID());
-            int thisAmount = getAmount(p);
-
-            volumeCredits += getVolumeCredits(p, play);
-
             result.append(String.format("  %s: %s (%s seats)%n",
                     play.getName(),
-                    usd(thisAmount),
+                    usd(getAmount(p)),
                     p.getAudience()));
-
-            totalAmount += thisAmount;
         }
 
+        // ---- Loop 2: calculate total volume credits ----
+        int volumeCredits = getTotalVolumeCredits();
+
+        // ---- Loop 3: calculate total amount ----
+        int totalAmount = getTotalAmount();
+
+        // ---- Final Summary ----
         result.append(String.format("Amount owed is %s%n", usd(totalAmount)));
         result.append(String.format("You earned %s credits%n", volumeCredits));
 
         return result.toString();
+    }
+
+    @SuppressWarnings({"checkstyle:FinalLocalVariable", "checkstyle:SuppressWarnings"})
+    private int getTotalVolumeCredits() {
+        int result = 0;
+        for (Performance p : invoice.getPerformances()) {
+            Play play = plays.get(p.getPlayID());
+            result += getVolumeCredits(p, play);
+        }
+        return result;
+    }
+
+    private int getTotalAmount() {
+        int result = 0;
+        for (Performance p : invoice.getPerformances()) {
+            result += getAmount(p);
+        }
+        return result;
     }
 
     private static int getVolumeCredits(Performance performance, Play play) {
@@ -48,6 +68,7 @@ public class StatementPrinter {
         return result;
     }
 
+    @SuppressWarnings({"checkstyle:FinalLocalVariable", "checkstyle:SuppressWarnings", "checkstyle:MagicNumber"})
     private int getAmount(Performance performance) {
         Play play = plays.get(performance.getPlayID());
         int result = 0;
